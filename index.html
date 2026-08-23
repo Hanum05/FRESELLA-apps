@@ -348,34 +348,172 @@
                 </div>
 
                 <div id="tab-dash-inventory" class="tab-content hidden space-y-6">
-                    <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-slate-200 text-center py-12">
-                        <i class="fa-solid fa-boxes-stacked text-amber-300 text-5xl mb-4"></i>
-                        <h2 class="text-2xl font-bold font-heading text-slate-800">Smart Inventory Manager</h2>
-                        <p class="text-sm text-slate-500 max-w-md mx-auto mt-2">Daftar stok buah-buahan dengan urutan prioritas konsumsi (FIFO) berdasarkan skor kesegaran.</p>
-                        <button onclick="switchTab('dashboard')" class="mt-6 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-6 py-2 rounded-xl text-sm">Kembali ke Dashboard</button>
+                    <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-slate-200 space-y-6">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-5">
+                            <div>
+                                <h2 class="text-2xl font-bold font-heading text-slate-800 flex items-center gap-3">
+                                    <i class="fa-solid fa-boxes-stacked text-amber-500"></i> Smart Inventory (FIFO)
+                                </h2>
+                                <p class="text-sm text-slate-500 mt-1">Sistem antrean prioritas konsumsi berdasarkan data masuk paling awal.</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <!-- Form Add -->
+                            <div class="lg:col-span-1 bg-slate-50 border border-slate-200 p-5 rounded-2xl h-fit">
+                                <h3 class="font-bold text-slate-700 mb-4 text-sm uppercase tracking-wider border-b border-slate-200 pb-2">Tambah Stok Masuk</h3>
+                                <form id="form-inventory" onsubmit="addInventory(event)" class="space-y-4">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Buah</label>
+                                        <input type="text" id="inv-input-name" placeholder="Misal: Pisang Cavendish" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition" required>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal Panen / Masuk</label>
+                                        <input type="date" id="inv-input-date" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-amber-500 outline-none transition" required>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-600 mb-1">Kuantitas (kg)</label>
+                                        <input type="number" step="0.1" id="inv-input-qty" placeholder="Misal: 10.5" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-amber-500 outline-none transition" required>
+                                    </div>
+                                    <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-xl shadow-md transition text-sm flex justify-center items-center gap-2">
+                                        <i class="fa-solid fa-plus"></i> Simpan Stok
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- List Table -->
+                            <div class="lg:col-span-2 bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-left text-sm">
+                                        <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold border-b border-slate-200">
+                                            <tr>
+                                                <th class="py-3 px-4">Informasi Item</th>
+                                                <th class="py-3 px-4">Masuk / Usia</th>
+                                                <th class="py-3 px-4 text-center">Tersedia</th>
+                                                <th class="py-3 px-4 text-right">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="inv-tbody" class="divide-y divide-slate-100">
+                                            <!-- Data dinamis akan dimuat di sini oleh JS -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
                 <div id="tab-dash-lab" class="tab-content hidden space-y-6">
-                    <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-slate-200 text-center py-12">
-                        <i class="fa-solid fa-flask text-kitosan-400 text-5xl mb-4"></i>
-                        <h2 class="text-2xl font-bold font-heading text-slate-800">Kalkulator Dosis Lab</h2>
-                        <p class="text-sm text-slate-500 max-w-md mx-auto mt-2">Modul untuk menghitung kebutuhan volume (ml) cairan Kitosan berdasarkan berat buah (kg).</p>
-                        <button onclick="switchTab('dashboard')" class="mt-6 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-6 py-2 rounded-xl text-sm">Kembali ke Dashboard</button>
+                    <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-slate-200">
+                        <div class="text-center max-w-2xl mx-auto mb-8">
+                            <div class="w-16 h-16 bg-kitosan-50 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <i class="fa-solid fa-flask text-kitosan-600 text-2xl"></i>
+                            </div>
+                            <h2 class="text-2xl font-bold font-heading text-slate-800">Kalkulator Dosis Aplikasi Kitosan</h2>
+                            <p class="text-sm text-slate-500 mt-2">Hitung kebutuhan volume pelapisan edible coating secara presisi untuk meminimalisir pemborosan bahan (Zero Waste).</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                            <!-- Input Form -->
+                            <div class="bg-slate-50 border border-slate-200 p-6 rounded-2xl">
+                                <form id="form-lab" onsubmit="calculateDose(event)" class="space-y-5">
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-700 mb-1">Total Berat Buah (kg)</label>
+                                        <input type="number" step="0.1" id="lab-weight" placeholder="Contoh: 25.5" class="w-full p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-kitosan-500 outline-none transition" required>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-700 mb-1">Konsentrasi Kitosan (%)</label>
+                                        <div class="flex items-center gap-3">
+                                            <input type="number" step="0.1" id="lab-conc" value="1.5" class="w-full p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-kitosan-500 outline-none transition" required>
+                                            <span class="text-xs text-slate-500 w-32">Ideal: 1.0 - 2.0%</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-700 mb-1">Rasio Penyemprotan (ml/kg)</label>
+                                        <div class="flex items-center gap-3">
+                                            <input type="number" step="1" id="lab-ratio" value="10" class="w-full p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-kitosan-500 outline-none transition" required>
+                                            <span class="text-xs text-slate-500 w-32">Standar: 10 ml/kg</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex gap-3 pt-2">
+                                        <button type="submit" class="flex-1 bg-kitosan-600 hover:bg-kitosan-700 text-white font-bold py-3 rounded-xl shadow-md transition">Hitung Dosis</button>
+                                        <button type="button" onclick="resetLab()" class="px-6 bg-white hover:bg-slate-100 border border-slate-200 text-slate-600 font-bold rounded-xl transition">Reset</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Result Display -->
+                            <div class="flex flex-col justify-center relative">
+                                <div id="lab-result" class="hidden transform transition-all duration-500 scale-95 opacity-0 bg-white border-2 border-kitosan-100 shadow-lg rounded-2xl p-6 text-center">
+                                    <span class="bg-kitosan-50 text-kitosan-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4 inline-block">Hasil Kalkulasi</span>
+                                    
+                                    <div class="space-y-6">
+                                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                                            <p class="text-xs text-slate-500 uppercase font-semibold mb-1">Total Larutan (Air + Asam Asetat)</p>
+                                            <p id="res-liquid" class="text-3xl font-bold text-slate-800 font-heading">--</p>
+                                        </div>
+                                        
+                                        <div class="bg-kitosan-50 rounded-xl p-4 border border-kitosan-200">
+                                            <p class="text-xs text-kitosan-700 uppercase font-semibold mb-1">Bubuk Kitosan Murni</p>
+                                            <p id="res-powder" class="text-3xl font-bold text-kitosan-700 font-heading">--</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <p class="text-[10px] text-slate-400 mt-4 px-4">* Larutkan bubuk dalam 1% asam asetat sebelum dicampur air aquades hingga mencapai total volume larutan.</p>
+                                </div>
+                                
+                                <div id="lab-placeholder" class="text-center p-8 border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center text-slate-400 h-full transition-all">
+                                    <i class="fa-solid fa-calculator text-4xl mb-3 opacity-50"></i>
+                                    <p class="text-sm">Masukkan data di form untuk melihat hasil kalkulasi laboratorium.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
                 <div id="tab-dash-rescue" class="tab-content hidden space-y-6">
-                    <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-slate-200 text-center py-12">
-                        <i class="fa-solid fa-leaf text-emerald-400 text-5xl mb-4"></i>
-                        <h2 class="text-2xl font-bold font-heading text-slate-800">Food Rescue Engine</h2>
-                        <p class="text-sm text-slate-500 max-w-md mx-auto mt-2">Dapatkan resep dan ide pengolahan untuk buah dengan indikator "LESS FRESH" agar tidak terbuang.</p>
-                        <button onclick="switchTab('dashboard')" class="mt-6 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-6 py-2 rounded-xl text-sm">Kembali ke Dashboard</button>
+                    <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-slate-200">
+                        <div class="border-b border-slate-100 pb-5 mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                            <div>
+                                <h2 class="text-2xl font-bold font-heading text-slate-800 flex items-center gap-3">
+                                    <i class="fa-solid fa-leaf text-emerald-500"></i> Food Rescue Engine
+                                </h2>
+                                <p class="text-sm text-slate-500 mt-1">Cegah food waste! Dapatkan rekomendasi pengolahan untuk buah dengan status LESS FRESH.</p>
+                            </div>
+                            
+                            <!-- Form Mini -->
+                            <form id="form-rescue" onsubmit="addRescue(event)" class="flex items-center gap-2 w-full md:w-auto bg-slate-50 p-2 rounded-xl border border-slate-200">
+                                <input type="text" id="res-input-name" placeholder="Nama Buah..." class="w-full md:w-32 p-2 rounded-lg text-sm border border-slate-200 outline-none focus:ring-2 focus:ring-emerald-400" required>
+                                <input type="number" step="0.1" id="res-input-qty" placeholder="Kg" class="w-20 p-2 rounded-lg text-sm border border-slate-200 outline-none focus:ring-2 focus:ring-emerald-400" required>
+                                <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-white p-2 rounded-lg font-bold transition"><i class="fa-solid fa-plus"></i></button>
+                            </form>
+                        </div>
+
+                        <!-- Grid Cards -->
+                        <div id="rescue-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                            <!-- Data dimuat di sini -->
+                        </div>
                     </div>
                 </div>
 
             </div>
         </main>
+    </div>
+
+    <!-- MODAL CUSTOM -->
+    <div id="custom-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex-col items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 transform transition-all duration-300 scale-95 opacity-0" id="custom-modal-content">
+            <h3 id="custom-modal-title" class="text-lg font-bold text-slate-800 mb-2 font-heading">Peringatan</h3>
+            <p id="custom-modal-desc" class="text-sm text-slate-600 mb-6 leading-relaxed">Pesan peringatan disini.</p>
+            
+            <input type="number" step="0.1" id="custom-modal-input" class="hidden w-full p-3 border border-slate-300 rounded-xl text-sm mb-5 focus:ring-2 focus:ring-[#e11d48] outline-none" placeholder="">
+
+            <div class="flex justify-end gap-3">
+                <button id="custom-modal-btn-cancel" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold rounded-xl transition">Batal</button>
+                <button id="custom-modal-btn-confirm" class="px-5 py-2.5 bg-[#e11d48] hover:bg-rose-700 text-white text-sm font-semibold rounded-xl transition shadow-lg shadow-rose-900/20">OK</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -654,6 +792,345 @@
             document.getElementById('aiColorPreview').innerHTML = '<i class="fa-solid fa-droplet text-slate-300 text-xl"></i>';
             document.getElementById('aiRecommendation').innerText = "Pilih kamera untuk mulai membaca indikator warna. Pastikan pencahayaan cukup.";
         }
+
+        // --- CUSTOM MODAL SYSTEM (MENGGANTIKAN ALERT & CONFIRM BAWAAN) ---
+        let modalCallback = null;
+        let modalInputMode = false;
+
+        function showModal({ title, desc, showCancel = false, confirmText = 'OK', type = 'info', isInput = false, inputPlaceholder = '' }, callback) {
+            const modal = document.getElementById('custom-modal');
+            const content = document.getElementById('custom-modal-content');
+            
+            document.getElementById('custom-modal-title').innerText = title;
+            document.getElementById('custom-modal-desc').innerText = desc;
+            
+            const btnCancel = document.getElementById('custom-modal-btn-cancel');
+            const btnConfirm = document.getElementById('custom-modal-btn-confirm');
+            const inputField = document.getElementById('custom-modal-input');
+            
+            btnConfirm.innerText = confirmText;
+            modalCallback = callback;
+            modalInputMode = isInput;
+            
+            if (showCancel) btnCancel.classList.remove('hidden');
+            else btnCancel.classList.add('hidden');
+
+            if (isInput) {
+                inputField.classList.remove('hidden');
+                inputField.placeholder = inputPlaceholder;
+                inputField.value = '';
+            } else {
+                inputField.classList.add('hidden');
+            }
+
+            // Ganti tema warna tombol konfirmasi
+            if(type === 'danger') btnConfirm.className = "px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold rounded-xl transition shadow-md shadow-rose-900/20";
+            else if (type === 'success') btnConfirm.className = "px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl transition shadow-md shadow-emerald-900/20";
+            else btnConfirm.className = "px-5 py-2.5 bg-[#e11d48] hover:bg-rose-700 text-white text-sm font-semibold rounded-xl transition shadow-md shadow-rose-900/20";
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+                if(isInput) inputField.focus();
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('custom-modal');
+            const content = document.getElementById('custom-modal-content');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 200);
+        }
+
+        document.getElementById('custom-modal-btn-cancel').addEventListener('click', () => {
+            closeModal();
+            if(modalCallback && modalInputMode) modalCallback(null);
+            else if (modalCallback) modalCallback(false);
+        });
+
+        document.getElementById('custom-modal-btn-confirm').addEventListener('click', () => {
+            closeModal();
+            if(modalCallback) {
+                if(modalInputMode) modalCallback(document.getElementById('custom-modal-input').value);
+                else modalCallback(true);
+            }
+        });
+
+        // --- APP STATE & LOCAL STORAGE ---
+        let appInventory = JSON.parse(localStorage.getItem('fresella_inventory')) || [];
+        let appRescue = JSON.parse(localStorage.getItem('fresella_rescue')) || [];
+
+        function saveState() {
+            localStorage.setItem('fresella_inventory', JSON.stringify(appInventory));
+            localStorage.setItem('fresella_rescue', JSON.stringify(appRescue));
+        }
+
+        // --- INVENTORY (FIFO) LOGIC ---
+        function renderInventory() {
+            const tbody = document.getElementById('inv-tbody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            
+            // Urutkan data berdasarkan tanggal masuk (FIFO - First In First Out)
+            appInventory.sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            if (appInventory.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center py-6 text-slate-400 text-sm italic">Belum ada data stok yang tercatat.</td></tr>';
+                return;
+            }
+
+            appInventory.forEach((item, index) => {
+                const dateObj = new Date(item.date);
+                const formattedDate = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+                const daysOld = Math.floor((new Date() - dateObj) / (1000 * 60 * 60 * 24));
+                
+                // Menentukan baris prioritas konsumsi
+                const isUrgent = daysOld > 5;
+                const rowClass = isUrgent ? 'bg-amber-50/50 hover:bg-amber-50' : 'hover:bg-slate-50';
+                const badge = isUrgent ? '<span class="ml-2 text-[9px] bg-amber-200 text-amber-800 px-2 py-0.5 rounded-full uppercase font-bold tracking-wider">Prioritas</span>' : '';
+                const timeText = daysOld === 0 ? 'Hari ini' : (daysOld < 0 ? 'Mendatang' : `${daysOld} hari lalu`);
+
+                const tr = document.createElement('tr');
+                tr.className = `border-b border-slate-100 ${rowClass} transition`;
+                tr.innerHTML = `
+                    <td class="py-3 px-4">
+                        <div class="font-semibold text-slate-800 flex items-center">${item.name} ${badge}</div>
+                    </td>
+                    <td class="py-3 px-4">
+                        <div class="text-slate-700 font-medium">${formattedDate}</div>
+                        <div class="text-[10px] text-slate-500">${timeText}</div>
+                    </td>
+                    <td class="py-3 px-4 text-center font-bold text-slate-700">${item.qty} <span class="text-xs font-normal text-slate-500">kg</span></td>
+                    <td class="py-3 px-4 text-right">
+                        <div class="flex justify-end gap-2">
+                            <button onclick="consumeItem(${index})" class="bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-700 px-3 py-1.5 rounded-lg text-xs font-bold transition">Ambil</button>
+                            <button onclick="deleteItem(${index})" class="bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-rose-600 px-2.5 py-1.5 rounded-lg text-xs transition"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function addInventory(e) {
+            e.preventDefault();
+            const name = document.getElementById('inv-input-name').value;
+            const date = document.getElementById('inv-input-date').value;
+            const qty = document.getElementById('inv-input-qty').value;
+
+            if (!name || !date || !qty) {
+                return showModal({title: 'Perhatian', desc: 'Mohon isi semua kolom untuk menambahkan stok.'});
+            }
+
+            appInventory.push({ id: Date.now(), name, date, qty: parseFloat(qty) });
+            saveState();
+            renderInventory();
+            document.getElementById('form-inventory').reset();
+        }
+
+        function deleteItem(index) {
+            showModal({
+                title: 'Hapus Stok',
+                desc: 'Yakin ingin menghapus item ini dari inventory secara permanen?',
+                showCancel: true,
+                type: 'danger',
+                confirmText: 'Hapus'
+            }, (confirmed) => {
+                if(confirmed) {
+                    appInventory.splice(index, 1);
+                    saveState();
+                    renderInventory();
+                }
+            });
+        }
+
+        function consumeItem(index) {
+            const item = appInventory[index];
+            showModal({
+                title: 'Gunakan Stok (FIFO)',
+                desc: `Berapa kg ${item.name} yang ingin diambil? (Tersedia: ${item.qty} kg)`,
+                showCancel: true,
+                isInput: true,
+                inputPlaceholder: 'Contoh: 2.5',
+                confirmText: 'Proses'
+            }, (val) => {
+                if (val === null) return;
+                const qty = parseFloat(val);
+                if (isNaN(qty) || qty <= 0) return showModal({title: 'Error', desc: 'Jumlah yang dimasukkan tidak valid.'});
+                if (qty > item.qty) return showModal({title: 'Error', desc: 'Jumlah pengambilan melebihi stok tersedia!'});
+                
+                item.qty = parseFloat((item.qty - qty).toFixed(2)); // handle floating point precision
+                if (item.qty === 0) {
+                    appInventory.splice(index, 1);
+                }
+                saveState();
+                renderInventory();
+            });
+        }
+
+        // --- KALKULATOR LAB LOGIC ---
+        function calculateDose(e) {
+            e.preventDefault();
+            const weight = parseFloat(document.getElementById('lab-weight').value);
+            const conc = parseFloat(document.getElementById('lab-conc').value);
+            const ratio = parseFloat(document.getElementById('lab-ratio').value);
+
+            if (isNaN(weight) || isNaN(conc) || isNaN(ratio)) {
+                return showModal({title: 'Error', desc: 'Format angka tidak valid.'});
+            }
+
+            const totalLiquid = weight * ratio; // Total pelarut dalam ml
+            const totalPowder = (conc / 100) * totalLiquid; // Kebutuhan serbuk dalam gram
+
+            document.getElementById('res-liquid').innerText = totalLiquid.toFixed(1) + ' ml';
+            document.getElementById('res-powder').innerText = totalPowder.toFixed(2) + ' gr';
+            
+            document.getElementById('lab-placeholder').classList.add('hidden');
+            const resultBox = document.getElementById('lab-result');
+            resultBox.classList.remove('hidden');
+            
+            setTimeout(() => {
+                resultBox.classList.remove('scale-95', 'opacity-0');
+                resultBox.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function resetLab() {
+            document.getElementById('form-lab').reset();
+            const resultBox = document.getElementById('lab-result');
+            resultBox.classList.remove('scale-100', 'opacity-100');
+            resultBox.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                resultBox.classList.add('hidden');
+                document.getElementById('lab-placeholder').classList.remove('hidden');
+            }, 300);
+        }
+
+        // --- FOOD RESCUE LOGIC ---
+        function renderRescue() {
+            const container = document.getElementById('rescue-cards');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (appRescue.length === 0) {
+                container.innerHTML = '<div class="col-span-full text-center py-12 bg-slate-50 rounded-2xl border border-dashed border-slate-300 text-slate-500"><i class="fa-solid fa-face-smile-beam text-4xl mb-3 text-slate-300"></i><p>Belum ada makanan yang di-rescue. Luar biasa!</p></div>';
+                return;
+            }
+
+            appRescue.forEach((item, index) => {
+                const dateObj = new Date(item.date);
+                const formattedDate = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+                
+                // Algoritma rekomendasi sederhana berdasarkan nama
+                let recs = "Kompos Organik, Pakan Ternak, Bio-Enzim";
+                let icon = "fa-recycle";
+                let color = "text-amber-600";
+                let bg = "bg-amber-100";
+                
+                const lowerName = item.name.toLowerCase();
+                if (lowerName.includes('pisang') || lowerName.includes('mangga') || lowerName.includes('apel') || lowerName.includes('stroberi')) {
+                    recs = "Smoothies, Selai Buah, Bolu Pan, Manisan";
+                    icon = "fa-blender";
+                    color = "text-purple-600";
+                    bg = "bg-purple-100";
+                } else if (lowerName.includes('tomat') || lowerName.includes('cabai') || lowerName.includes('bawang')) {
+                    recs = "Saus Makanan, Sambal Kering, Kaldu Nabati";
+                    icon = "fa-pepper-hot";
+                    color = "text-red-600";
+                    bg = "bg-red-100";
+                }
+
+                const div = document.createElement('div');
+                div.className = "bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col transition hover:shadow-md";
+                div.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 ${bg} ${color} rounded-xl flex items-center justify-center text-xl">
+                                <i class="fa-solid ${icon}"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 leading-tight">${item.name}</h4>
+                                <p class="text-[11px] text-slate-500 mt-0.5">Masuk: ${formattedDate} • <b>${item.qty} kg</b></p>
+                            </div>
+                        </div>
+                        <button onclick="deleteRescue(${index})" class="text-slate-400 hover:text-rose-500 transition p-1"><i class="fa-solid fa-trash text-sm"></i></button>
+                    </div>
+                    <div class="mt-auto pt-4 border-t border-slate-100">
+                        <p class="text-[10px] uppercase font-bold text-slate-400 mb-1 tracking-wider">Potensi Olahan</p>
+                        <p class="text-sm font-semibold text-slate-700 leading-tight mb-4">${recs}</p>
+                        <button onclick="klaimRescue(${index})" class="w-full bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 font-bold py-2.5 rounded-xl text-xs transition flex justify-center items-center gap-2">
+                            <i class="fa-solid fa-check-circle"></i> Tandai Sudah Diolah
+                        </button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function addRescue(e) {
+            e.preventDefault();
+            const name = document.getElementById('res-input-name').value;
+            const qty = document.getElementById('res-input-qty').value;
+            const date = new Date().toISOString();
+
+            if (!name || !qty) return showModal({title: 'Perhatian', desc: 'Mohon isi nama buah dan jumlah.'});
+
+            appRescue.push({ id: Date.now(), name, qty: parseFloat(qty), date });
+            saveState();
+            renderRescue();
+            document.getElementById('form-rescue').reset();
+        }
+
+        function deleteRescue(index) {
+            showModal({
+                title: 'Hapus dari Rescue',
+                desc: 'Hapus item ini dari daftar penyelamatan?',
+                showCancel: true,
+                type: 'danger',
+                confirmText: 'Hapus'
+            }, (confirmed) => {
+                if(confirmed) {
+                    appRescue.splice(index, 1);
+                    saveState();
+                    renderRescue();
+                }
+            });
+        }
+
+        function klaimRescue(index) {
+            showModal({
+                title: 'Misi Berhasil!',
+                desc: 'Bagus sekali! Anda telah menyelamatkan makanan ini dari tempat sampah. Tandai sebagai selesai?',
+                showCancel: true,
+                type: 'success',
+                confirmText: 'Selesai'
+            }, (confirmed) => {
+                if(confirmed) {
+                    const statSavedKg = document.getElementById('statSavedKg');
+                    if (statSavedKg) {
+                        let currentSaved = parseFloat(statSavedKg.innerText);
+                        if (isNaN(currentSaved)) currentSaved = 0;
+                        statSavedKg.innerText = (currentSaved + appRescue[index].qty).toFixed(1) + ' kg';
+                    }
+                    appRescue.splice(index, 1);
+                    saveState();
+                    renderRescue();
+                }
+            });
+        }
+
+        // --- Inisialisasi Fitur Baru ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderInventory();
+            renderRescue();
+        });
 
     </script>
 </body>
